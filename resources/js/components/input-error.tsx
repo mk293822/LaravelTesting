@@ -9,20 +9,23 @@ export default function InputError({ message, className = '', ...props }: HTMLAt
     const [displayMessage, setDisplayMessage] = useState<string | undefined>(message);
 
     useEffect(() => {
-        if (!initialSeconds) return;
+        if (!initialSeconds) {
+            setDisplayMessage(message);
+            return;
+        }
 
         setDisplayMessage(`Too many login attempts. Please try again in ${initialSeconds} seconds.`);
 
         let seconds = initialSeconds;
 
         const interval = setInterval(() => {
-                if (seconds && seconds > 1) {
-                    seconds -= 1;
-                    setDisplayMessage(`Too many login attempts. Please try again in ${seconds} seconds.`);
-                } else {
-                    clearInterval(interval);
-                    setDisplayMessage('You can try again now.');
-                }
+            if (seconds && seconds > 1) {
+                seconds -= 1;
+                setDisplayMessage(`Too many login attempts. Please try again in ${seconds} seconds.`);
+            } else {
+                clearInterval(interval);
+                setDisplayMessage('You can try again now.');
+            }
         }, 1000);
 
         return () => clearInterval(interval);

@@ -1,10 +1,17 @@
 <?php
 
-namespace App\Models;
+// @formatter:off
+// phpcs:ignoreFile
+/**
+ * A helper file for your Eloquent Models
+ * Copy the phpDocs from this file to the correct Model,
+ * And remove them from this file, to prevent double declarations.
+ *
+ * @author Barry vd. Heuvel <barryvdh@gmail.com>
+ */
 
-use App\Enums\SkillLevelEnum;
-use Illuminate\Database\Eloquent\Model;
 
+namespace App\Models{
 /**
  * 
  *
@@ -23,15 +30,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSkills whereUserId($value)
  * @mixin \Eloquent
  */
-class UserSkills extends Model
-{
-    protected $fillable = [
-        "user_id",
-        "skill_id",
-        "level"
-    ];
-
-    protected $casts = [
-        "level" => SkillLevelEnum::class
-    ];
+	class UserSkills extends \Eloquent {}
 }
+
