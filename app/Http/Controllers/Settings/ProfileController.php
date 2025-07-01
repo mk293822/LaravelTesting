@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Settings;
 
+use App\Enums\SkillLevelEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
+use App\Models\PersonalLinks;
+use App\Models\Skill;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -26,47 +27,46 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function deleteProfilePhoto(Request $request): RedirectResponse
+    public function user_skills_and_links(Request $request)
     {
         $user = $request->user();
+        $all_skills = Skill::all();
+        $skills = $user->skills;
+        $levels = array_map(fn($case) => $case->value, SkillLevelEnum::cases());
+        $personal_links = $user->personal_links->toArray();
 
-        if ($user->profile_photo_path && Storage::disk('public')->exists($user->profile_photo_path)) {
-            Storage::disk('public')->delete($user->profile_photo_path);
-        }
-
-        $user->profile_photo_path = null;
-        $user->save();
-
-        return to_route('profile.edit');
+        return Inertia('settings/skills_and_links', compact('skills', 'levels', 'all_skills', 'personal_links'));
     }
 
-
-    public function uploadProfilePhoto(Request $request): RedirectResponse
+    public function add_personal_link(Request $request)
     {
-        $request->validate(['profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480']);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'link' => 'required|url',
+        ]);
 
-        $old_photo_path = $request->user()->profile_photo_path;
+        PersonalLinks::updateOrCreate(
+            ['user_id' => $request->user()->id, 'link' => $validated['link']],
+            ['name' => $validated['name']]
+        );
 
-        if ($old_photo_path && Storage::disk('public')->exists($old_photo_path)) {
-            Storage::disk('public')->delete($old_photo_path);
-        }
-        $file_name = $request->file('profile_photo')->hashName();
-        $path = $request->file('profile_photo')->storeAs('profile_photos', $file_name, 'public');
-        $validated['profile_photo_path'] = $path;
 
-        $request->user()->fill($validated);
-
-        $request->user()->save();
-
-        return to_route('profile.edit');
+        return redirect()->back();
     }
+
+    public function delete_personal_link(Request $request, $link_id)
+    {
+        $link = PersonalLinks::findOrFail($link_id);
+        $link->delete();
+        return redirect()->back();
+    }
+
 
     /**
      * Update the user's profile settings.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-
         $validated = $request->validated();
 
         $request->user()->fill($validated);
@@ -83,6 +83,12 @@ class ProfileController extends Controller
     /**
      * Delete the user's account.
      */
+
+    public function deleteAccount(): Response
+    {
+        return Inertia::render('settings/delete-account');
+    }
+
     public function destroy(Request $request): RedirectResponse
     {
         $request->validate([

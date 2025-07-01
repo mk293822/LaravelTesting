@@ -12,9 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_skills', function (Blueprint $table) {
+        Schema::create('user_skill', function (Blueprint $table) {
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('skill_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('skill_id')->constrained('skills')->cascadeOnDelete();
             $table->enum('level', array_map(fn($level) => $level->value, SkillLevelEnum::cases()))->default(SkillLevelEnum::BEGINNER->value);
             $table->timestamps();
         });

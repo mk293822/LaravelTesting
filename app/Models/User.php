@@ -39,6 +39,10 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $casts = [
+        'links' => 'array',
+    ];
+
     /**
      * Get the attributes that should be cast.
      *
@@ -54,11 +58,23 @@ class User extends Authenticatable
 
     public function skills()
     {
-        return $this->belongsToMany(Skills::class, 'user_skills')->using(UserSkills::class)->withPivot('level')->withTimestamps();
+        return $this->belongsToMany(Skill::class, 'user_skill')->using(UserSkill::class)->withPivot('level')->withTimestamps();
     }
 
     public function getProfilePhotoUrlAttribute()
     {
         return $this->profile_photo_path ? Storage::url($this->profile_photo_path) : null;
+    }
+
+    public function personal_links()
+    {
+        return $this->hasMany(PersonalLinks::class, 'user_id');
+    }
+
+    public function getFilteredPersonalLinksAttribute()
+    {
+        return $this->personal_links->filter(function ($link) {
+            return isset($link->name, $link->link) && filter_var($link->link, FILTER_VALIDATE_URL);
+        })->values();
     }
 }

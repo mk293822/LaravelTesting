@@ -13,6 +13,11 @@ const sidebarNavItems: NavItem[] = [
         icon: null,
     },
     {
+        title: 'Skills & Personal Links',
+        href: '/settings/userSkillsAndLinks',
+        icon: null,
+    },
+    {
         title: 'Password',
         href: '/settings/password',
         icon: null,
@@ -20,6 +25,11 @@ const sidebarNavItems: NavItem[] = [
     {
         title: 'Appearance',
         href: '/settings/appearance',
+        icon: null,
+    },
+    {
+        title: 'Delete Account',
+        href: '/settings/deleteAccount',
         icon: null,
     },
 ];
