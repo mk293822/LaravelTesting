@@ -29,7 +29,7 @@ jobs:
 
       - name: Install Frontend dependencies
         run: |
-          npm install --prefix frontend  # Install frontend dependencies
+          npm install # Install frontend dependencies
 
       # - name: Run Laravel tests
       #   run: |
@@ -37,11 +37,11 @@ jobs:
 
       - name: Build React project
         run: |
-          npm run build --prefix frontend  # Build React app
+          npm run build  # Build React app
 
       # - name: Run React tests
       #   run: |
-      #     npm test -- --coverage --prefix frontend  # Run React tests
+      #     npm test -- --coverage # Run React tests
 
       - name: Run dev command (Backend + Frontend)
         run: |
