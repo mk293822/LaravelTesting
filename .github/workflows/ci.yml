@@ -27,6 +27,9 @@ jobs:
           curl -sS https://getcomposer.org/installer | php
           php composer.phar install --no-interaction --prefer-dist
 
+      - name: Run Backend
+        run: php artisan serve
+
       - name: Install Frontend dependencies
         run: |
           npm install # Install frontend dependencies
@@ -42,7 +45,3 @@ jobs:
       # - name: Run React tests
       #   run: |
       #     npm test -- --coverage # Run React tests
-
-      - name: Run dev command (Backend + Frontend)
-        run: |
-          composer run dev  # Runs both backend and frontend
