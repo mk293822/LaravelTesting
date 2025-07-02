@@ -1,0 +1,48 @@
+name: Laravel + React CI - Test Only
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # Combined Backend and Frontend Test job
+  combined:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+
+      - name: Install Composer dependencies
+        run: |
+          curl -sS https://getcomposer.org/installer | php
+          php composer.phar install --no-interaction --prefer-dist
+
+      - name: Install Frontend dependencies
+        run: |
+          npm install --prefix frontend  # Install frontend dependencies
+
+      - name: Run Laravel tests
+        run: |
+          php artisan test
+
+      - name: Build React project
+        run: |
+          npm run build --prefix frontend  # Build React app
+
+      - name: Run React tests
+        run: |
+          npm test -- --coverage --prefix frontend  # Run React tests
+
+      - name: Run dev command (Backend + Frontend)
+        run: |
+          composer run dev  # Runs both backend and frontend
