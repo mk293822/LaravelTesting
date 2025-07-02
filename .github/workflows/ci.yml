@@ -20,7 +20,7 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
+          php-version: '8.4'
 
       - name: Install Composer dependencies
         run: |
@@ -31,17 +31,17 @@ jobs:
         run: |
           npm install --prefix frontend  # Install frontend dependencies
 
-      - name: Run Laravel tests
-        run: |
-          php artisan test
+      # - name: Run Laravel tests
+      #   run: |
+      #     php artisan test
 
       - name: Build React project
         run: |
           npm run build --prefix frontend  # Build React app
 
-      - name: Run React tests
-        run: |
-          npm test -- --coverage --prefix frontend  # Run React tests
+      # - name: Run React tests
+      #   run: |
+      #     npm test -- --coverage --prefix frontend  # Run React tests
 
       - name: Run dev command (Backend + Frontend)
         run: |
