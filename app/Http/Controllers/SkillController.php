@@ -24,9 +24,9 @@ class SkillController extends Controller
      */
     public function index(Request $request)
     {
-        $skills = $request->user()->skills;
+        $skills = Skill::orderByDesc('created_at')->get();
 
-        return Inertia('Skills', compact('skills'));
+        return Inertia('admin/skills', compact('skills'));
     }
 
     /**

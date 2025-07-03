@@ -29,8 +29,8 @@ jobs:
 
       - name: Install Frontend dependencies
         run: |
-          npm install # Install frontend dependencies
+          npm install --no-dev # Install frontend dependencies
 
       - name: Build React project
         run: |
-          npm run build  # Build React app
+          npm run build --no-dev  # Build React app
